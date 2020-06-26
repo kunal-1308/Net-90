@@ -34,25 +34,39 @@ class App(QFrame):
             self.tabbar.tabBarClicked.connect(self.SwitchTab)
             self.tabbar.setCurrentIndex(0)
             self.tabbar.setDrawBase(False)
+            self.tabbar.setLayoutDirection(Qt.LeftToRight)
+            self.tabbar.setElideMode(Qt.ElideLeft)
 
             # Keep Track of Tabs
             self.tabCount = 0
             self.tabs = []
+   
             #create Address bar
             self.Toolbar = QWidget()
             self.ToolbarLayout = QHBoxLayout()
             self.addressbar = AddressBar()
-
-            self.Toolbar.setLayout(self.ToolbarLayout)
-            self.ToolbarLayout.addWidget(self.addressbar)
-
-            #New Tab Button
             self.AddTabButton = QPushButton("+")
 
+            #New Tab Button
             self.addressbar.returnPressed.connect(self.BrowseTo)
-
             self.AddTabButton.clicked.connect(self.AddTab)
-            
+
+            #set toolbar buttons
+            self.BackButton = QPushButton("<")
+            self.BackButton.clicked.connect(self.GoBack)
+
+            self.ForwardButton = QPushButton(">")
+            self.ForwardButton.clicked.connect(self.GoForward)
+
+            self.ReloadButton = QPushButton("R")
+            self.ReloadButton.clicked.connect(self.ReloadPage)
+
+            #Build Toolbar
+            self.Toolbar.setLayout(self.ToolbarLayout)
+            self.ToolbarLayout.addWidget(self.BackButton)
+            self.ToolbarLayout.addWidget(self.ForwardButton)
+            self.ToolbarLayout.addWidget(self.ReloadButton)
+            self.ToolbarLayout.addWidget(self.addressbar)
             self.ToolbarLayout.addWidget(self.AddTabButton)
 
             #Set Main view
@@ -60,6 +74,7 @@ class App(QFrame):
             self.container.layout = QStackedLayout()
             self.container.setLayout(self.container.layout)
 
+            #construct main view from top level elements
             self.layout.addWidget(self.tabbar)
             self.layout.addWidget(self.Toolbar)
             self.layout.addWidget(self.container) 
@@ -154,6 +169,27 @@ class App(QFrame):
                   
                   else:
                         count += 1
+
+      def GoBack(self):
+            activeIndex = self.tabbar.currentIndex()
+            tab_name = self.tabbar.tabData(activeIndex)["object"]
+            tab_content = self.findChild(QWidget, tab_name).content
+
+            tab_content.back()
+
+      def GoForward(self):
+            activeIndex = self.tabbar.currentIndex()
+            tab_name = self.tabbar.tabData(activeIndex)["object"]
+            tab_content = self.findChild(QWidget, tab_name).content
+
+            tab_content.forward()
+      
+      def ReloadPage(self):
+            activeIndex = self.tabbar.currentIndex()
+            tab_name = self.tabbar.tabData(activeIndex)["object"]
+            tab_content = self.findChild(QWidget, tab_name).content
+
+            tab_content.reload()
 
 if __name__ == "__main__":
       app = QApplication(sys.argv)
