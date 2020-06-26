@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
 from PyQt5.QtGui import QIcon, QWindow, QImage
 from PyQt5.QtCore import *
 from PyQt5.QtWebEngineWidgets import *
+from PyQt5 import QtGui
 
 class AddressBar(QLineEdit):
       def __init__(self):
@@ -18,12 +19,14 @@ class AddressBar(QLineEdit):
 class App(QFrame):
       def __init__(self):
             super().__init__()
+            
             self.setWindowTitle("Net-90")
             self.setBaseSize(1366, 768)
             self.setMinimumSize(1366 ,768)
             self.CreateApp()
             
       def CreateApp(self):
+            self.setWindowIcon(QtGui.QIcon('logo.jpg'))
             self.layout = QVBoxLayout()
             self.layout.setSpacing(0)
             self.layout.setContentsMargins(0, 0, 0, 0)
