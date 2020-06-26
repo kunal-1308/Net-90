@@ -43,6 +43,7 @@ class App(QFrame):
    
             #create Address bar
             self.Toolbar = QWidget()
+            self.Toolbar.setObjectName("Toolbar")
             self.ToolbarLayout = QHBoxLayout()
             self.addressbar = AddressBar()
             self.AddTabButton = QPushButton("+")
@@ -103,6 +104,7 @@ class App(QFrame):
 
             self.tabs[i].content.titleChanged.connect(lambda: self.SetTabContent(i, "title"))
             self.tabs[i].content.iconChanged.connect(lambda: self.SetTabContent(i, "icon"))
+            self.tabs[i].content.urlChanged.connect(lambda: self.SetTabContent(i, "url"))
 
             #Add WebView to tabs layout
             self.tabs[i].layout.addWidget(self.tabs[i].content)
@@ -123,10 +125,13 @@ class App(QFrame):
             self.tabCount += 1
 
       def SwitchTab(self, i):
-            tab_data = self.tabbar.tabData(i)["object"]
-            print("tab: ", tab_data)
-            tab_content = self.findChild(QWidget, tab_data)
-            self.container.layout.setCurrentWidget(tab_content)  
+            if self.tabbar.tabData(i):
+                  tab_data = self.tabbar.tabData(i)["object"]
+                  #print("tab: ", tab_data)
+                  tab_content = self.findChild(QWidget, tab_data)
+                  self.container.layout.setCurrentWidget(tab_content)  
+                  new_url = tab_content.content.url().toString()
+                  self.addressbar.setText(new_url)
 
       def BrowseTo(self):
             text = self.addressbar.text()
@@ -149,8 +154,13 @@ class App(QFrame):
             tab_name = self.tabs[i].objectName()
 
             count = 0
-
             running = True
+            current_tab = self.tabbar.tabData(self.tabbar.currentIndex())["object"]
+
+            if current_tab == tab_name and type == "url":
+                  new_url = self.findChild(QWidget, tab_name).content.url().toString()
+                  self.addressbar.setText(new_url)
+                  return False
 
             while running:
                   tab_data_name = self.tabbar.tabData(count)
@@ -194,5 +204,8 @@ class App(QFrame):
 if __name__ == "__main__":
       app = QApplication(sys.argv)
       window = App()
+
+      with open("index.css", "r") as style:
+            app.setStyleSheet(style.read())
 
       sys.exit(app.exec_()) 
