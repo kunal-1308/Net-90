@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+
 from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
                               QPushButton, QLabel, QLineEdit, QTabBar,
                               QFrame, QStackedLayout)
