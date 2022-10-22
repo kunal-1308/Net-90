@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-
+# PyQt is a Python binding for Qt, which is a set of C++ libraries and development tools providing platform-independent abstractions for graphical user interfaces (GUIs).
 from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
                               QPushButton, QLabel, QLineEdit, QTabBar,
                               QFrame, QStackedLayout)
